@@ -60,3 +60,13 @@ export async function updateTodo(userId: string, todoId: string, updatedTodo: Up
     logger.info('Update todo', userId, updatedTodo)
     return await todoAccess.updateTodo(userId, todoId, updatedTodo)
 }
+
+export async function deleteTodo(userId: string, todoId: string): Promise<void> {
+    // Delete attachment object from S3
+    logger.info('delete S3 object', todoId)
+    await fileAccess.deleteAttachment(todoId)
+
+    // TODO: Remove a TODO item by id
+    logger.info('delete TODO item', userId, todoId)
+    await todoAccess.deleteTodo(userId, todoId)
+}

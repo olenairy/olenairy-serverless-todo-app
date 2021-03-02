@@ -33,5 +33,6 @@ sls deploy -v
 
 ## Frontend
 
-You can see the Frontend in different rep -  "olenairy-serverless-todo-app-client"
+You can see the Frontend in different rep -  "olenairy-serverless-todo-app-client" 
+https://github.com/olenairy/olenairy-serverless-todo-app-client.git
 

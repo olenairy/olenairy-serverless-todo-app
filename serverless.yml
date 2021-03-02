@@ -5,6 +5,12 @@ service:
 plugins: 
 - serverless-webpack
 - serverless-iam-roles-per-function
+
+#package:
+  #individually: true
+
+#start: 'cross-env NODE_OPTIONS=--max-old-space-size=8192 webpack'
+
 provider: 
   name: aws
   runtime: nodejs10.x
@@ -24,7 +30,20 @@ provider:
       Resource:
         - '*'
 
-  
+custom:
+  documentation:
+    api:
+      info:
+        version: v1.0.0
+        title: Todo App API
+        description: Simple Todo application
+    models:
+      - name: CreateTodoRequest
+        contentType: application/json
+        schema: ${file(models/create-todo-request.json)}
+      - name: UpdateTodoRequest
+        contentType: application/json
+        schema: ${file(models/update-todo-request.json)}  
       
         
 functions: 
@@ -46,7 +65,7 @@ functions:
         Action:
          
           - dynamodb:Query
-          - dynamodb:Scan
+          #- dynamodb:Scan
           - dynamodb:GetItem
               
         Resource: arn:aws:dynamodb:${self:provider.region}:006993831752:table/${self:provider.environment.TODOS_TABLE}/index/${self:provider.environment.USER_ID_INDEX}
@@ -131,6 +150,30 @@ functions:
           - dynamodb:GetItem
           - dynamodb:UpdateItem
         Resource: arn:aws:dynamodb:${self:provider.region}:006993831752:table/${self:provider.environment.TODOS_TABLE}
+      - Effect: Allow
+        Action:
+          - xray:PutTraceSegments
+        Resource: "*"
+  # TODO: Configure this function
+  DeleteTodo:
+    handler: src/lambda/http/deleteTodo.handler
+    events:
+      - http:
+          method: delete
+          path: todos/{todoId}
+          cors: true
+          authorizer: Auth
+    iamRoleStatementsName: deletetodo-lambda-role            
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:GetItem
+          - dynamodb:DeleteItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:006993831752:table/${self:provider.environment.TODOS_TABLE}
+      - Effect: Allow
+        Action:
+          - s3:DeleteObject
+        Resource: "arn:aws:s3:::${self:provider.environment.ATTACHMENT_S3_BUCKET}/*"
       - Effect: Allow
         Action:
           - xray:PutTraceSegments
