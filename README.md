@@ -1,10 +1,10 @@
 # olenairy-serverless-todo-app
-
+```
 Student: Olena Chudnovets
 Course: Cloud Developer
 Project: Serverless TODO Application
 Data: Marth 02 2021
-
+```
 ## Screenshots folder: 
 
 /screenshot
