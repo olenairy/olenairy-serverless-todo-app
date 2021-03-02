@@ -1,4 +1,5 @@
 # os hide files
+.vscode/launch.json
 .DS_Store
 # package directories
 node_modules
