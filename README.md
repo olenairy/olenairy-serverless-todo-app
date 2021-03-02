@@ -1,10 +1,10 @@
 # olenairy-serverless-todo-app
 
-# Functionality of the application
+## Functionality of the application
 
 This application will allow creating/removing/updating/fetching TODO items. Each TODO item can optionally have an attachment image. Each user only has access to TODO items that he/she has created.
 
-# How to run the application
+## How to run the application
 
 
 To deploy an application run the following commands:
