@@ -5,6 +5,7 @@ service:
 plugins: 
 - serverless-webpack
 - serverless-iam-roles-per-function
+- serverless-aws-documentation
 
 #package:
   #individually: true
@@ -12,11 +13,17 @@ plugins:
 #start: 'cross-env NODE_OPTIONS=--max-old-space-size=8192 webpack'
 
 provider: 
+  tracing:
+    lambda: true
+    apiGateway: true
+
   name: aws
   runtime: nodejs10.x
   
   stage: ${opt:stage, 'dev'}
   region: ${opt:region, 'us-east-1'}
+
+
   
   environment: 
     TODOS_TABLE: Todos-${self:provider.stage}
