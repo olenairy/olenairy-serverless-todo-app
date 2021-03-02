@@ -28,6 +28,9 @@ provider:
       
         
 functions: 
+  Auth:
+    handler: src/lambda/auth/auth0Authorizer.handler
+
   GetTodos:
     handler: src/lambda/http/getTodos.handler
     events:
@@ -35,6 +38,7 @@ functions:
           method: get
           path: todos
           cors: true
+          authorizer: Auth
     #iamRoleStatementsInherit: true
     iamRoleStatementsName: gettodos-lambda-role
     iamRoleStatements:
@@ -54,6 +58,84 @@ functions:
         Action:
           - xray:PutTraceSegments
         Resource: "*"
+  # TODO: Configure this function
+
+  CreateTodo:
+    handler: src/lambda/http/createTodo.handler
+    events:
+      - http:
+          method: post
+          path: todos
+          cors: true
+          authorizer: Auth
+          reqValidatorName: RequestBodyValidator
+          documentation:
+            summary: Create a new Todo
+            description: Create a new Todo
+            requestModels:
+              "application/json": CreateTodoRequest
+    iamRoleStatementsName: createtodos-lambda-role         
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:PutItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:006993831752:table/${self:provider.environment.TODOS_TABLE}
+      - Effect: Allow
+        Action:
+          - xray:PutTraceSegments
+        Resource: "*"
+  # TODO: Configure this function
+
+  GenerateUploadUrl:
+    handler: src/lambda/http/generateUploadUrl.handler
+    events:
+      - http:
+          method: post
+          path: todos/{todoId}/attachment
+          cors: true
+          authorizer: Auth
+    iamRoleStatementsName: gnruploadurl-lambda-role       
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:GetItem
+          - dynamodb:UpdateItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:006993831752:table/${self:provider.environment.TODOS_TABLE}
+      - Effect: Allow
+        Action:
+          - s3:PutObject
+        Resource: "arn:aws:s3:::${self:provider.environment.ATTACHMENT_S3_BUCKET}/*"
+      - Effect: Allow
+        Action:
+          - xray:PutTraceSegments
+        Resource: "*"
+  # TODO: Configure this function
+  UpdateTodo:
+    handler: src/lambda/http/updateTodo.handler
+    events:
+      - http:
+          method: patch
+          path: todos/{todoId}
+          cors: true
+          authorizer: Auth
+          reqValidatorName: RequestBodyValidator
+          documentation:
+            summary: Update Todo
+            description: Update Todo
+            requestModels:
+              "application/json": UpdateTodoRequest
+    iamRoleStatementsName: updatetodo-lambda-role           
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:GetItem
+          - dynamodb:UpdateItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:006993831752:table/${self:provider.environment.TODOS_TABLE}
+      - Effect: Allow
+        Action:
+          - xray:PutTraceSegments
+        Resource: "*"
+      
 resources:
   Resources:
     TodosDynamoDBTable:
