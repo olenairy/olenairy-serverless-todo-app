@@ -7,7 +7,7 @@ Data: Marth 02 2021
 ```
 ## Updated: 
 1.  Added Distributed tracing feature 
-<img width="900" alt="Screen Shot 2021-03-02 at 6 12 06 PM" src="https://user-images.githubusercontent.com/67039993/109722367-fc12fd80-7b82-11eb-95f7-a427a1ba92c3.png">
+<img width="600" alt="Screen Shot 2021-03-02 at 6 12 06 PM" src="https://user-images.githubusercontent.com/67039993/109722367-fc12fd80-7b82-11eb-95f7-a427a1ba92c3.png">
 2. Added validate HTTP requests 
 3. Added individually node package for Lambda function
 
